@@ -6,6 +6,7 @@ export type Permission =
   | "products:create"
   | "products:edit"
   | "products:delete"
+  | "products:view"
   | "products:view_cost"
   | "inventory:adjust"
   | "inventory:receive"

@@ -6,7 +6,7 @@ import { CashSession } from "@/models/CashSession";
 import { Expense } from "@/models/Expense";
 import { Return } from "@/models/Return";
 import { AuditLog } from "@/models/AuditLog";
-import { sumMoney, subtractMoney, calculateGrossMargin } from "@/lib/money";
+import { sumMoney, subtractMoney, calculateGrossMargin, multiplyMoney } from "@/lib/money";
 
 export interface DateRangeFilter {
   startDate: Date;
