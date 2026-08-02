@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useChat } from "ai/react";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
@@ -8,15 +9,10 @@ import {
   User,
   Send,
   Sparkles,
-  RefreshCw,
-  CheckCircle2,
-  AlertCircle,
-  HelpCircle,
-  PackageCheck,
   Zap,
 } from "lucide-react";
 
-export default function AIAssistantPage() {
+function AIAssistantChatContent() {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
 
@@ -95,7 +91,6 @@ export default function AIAssistantPage() {
                     : "bg-slate-950 border border-slate-800 text-slate-200 rounded-tl-none space-y-3"
                 }`}
               >
-                {/* Display Tool Executions Badges */}
                 {m.toolInvocations && m.toolInvocations.length > 0 && (
                   <div className="space-y-2 mb-3">
                     {m.toolInvocations.map((toolCall) => (
@@ -171,5 +166,13 @@ export default function AIAssistantPage() {
         </button>
       </form>
     </div>
+  );
+}
+
+export default function AIAssistantPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-slate-400">Cargando Asistente IA...</div>}>
+      <AIAssistantChatContent />
+    </Suspense>
   );
 }

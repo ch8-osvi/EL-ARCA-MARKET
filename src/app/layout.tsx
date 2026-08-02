@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -14,7 +14,13 @@ export const metadata: Metadata = {
     "Sistema integral de gestión de inventario, punto de venta, control de caja e Inteligencia Artificial determinista para El Arca Market.",
   keywords: ["punto de venta", "pos", "inventario", "el arca market", "gemini ai", "caja diario"],
   authors: [{ name: "El Arca Market Team" }],
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
