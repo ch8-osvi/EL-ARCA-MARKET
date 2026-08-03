@@ -2,26 +2,26 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Store, Lock, Mail, ArrowRight, ShieldCheck, UserCheck, Sun, Moon, Sparkles, CheckCircle2 } from "lucide-react";
+import { Store, Lock, Mail, ArrowRight, Sun, Moon, Sparkles, CheckCircle2 } from "lucide-react";
 import { useTheme } from "@/components/theme/ThemeProvider";
 
 export default function LoginPage() {
   const router = useRouter();
   const { isDark, toggleTheme } = useTheme();
   
-  // Login Form States
-  const [email, setEmail] = useState("admin@elarcamarket.com");
-  const [password, setPassword] = useState("Admin123!");
+  // Login Form States - Default to user requested account
+  const [email, setEmail] = useState("osvaldojesusappel@gmail.com");
+  const [password, setPassword] = useState("Osvaldo.RN8");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   // Setup Form States (Auto-Registration if empty database)
   const [setupRequired, setSetupRequired] = useState(false);
-  const [setupStep, setSetupStep] = useState(false); // true if showing setup form
+  const [setupStep, setSetupStep] = useState(false);
   const [shopName, setShopName] = useState("El Arca Market");
-  const [adminName, setAdminName] = useState("");
-  const [adminEmail, setAdminEmail] = useState("");
-  const [adminPassword, setAdminPassword] = useState("");
+  const [adminName, setAdminName] = useState("Osvaldo Appel");
+  const [adminEmail, setAdminEmail] = useState("osvaldojesusappel@gmail.com");
+  const [adminPassword, setAdminPassword] = useState("Osvaldo.RN8");
   const [setupSuccess, setSetupSuccess] = useState(false);
 
   // Check on mount if DB is empty
@@ -102,6 +102,7 @@ export default function LoginPage() {
 
       setSetupSuccess(true);
       setSetupRequired(false);
+      
       // Auto fill login fields with the newly created admin account
       setEmail(adminEmail);
       setPassword(adminPassword);
@@ -109,18 +110,13 @@ export default function LoginPage() {
       setTimeout(() => {
         setSetupStep(false);
         setSetupSuccess(false);
-      }, 3000);
+      }, 2000);
 
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Error al registrar setup");
     } finally {
       setLoading(false);
     }
-  };
-
-  const setPresetUser = (presetEmail: string, presetPass: string) => {
-    setEmail(presetEmail);
-    setPassword(presetPass);
   };
 
   return (
@@ -136,19 +132,19 @@ export default function LoginPage() {
       <button
         onClick={toggleTheme}
         title={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-        className="fixed top-4 right-4 p-2.5 rounded-xl border transition-all duration-200 z-50"
+        className="fixed top-4 right-4 p-2.5 rounded-xl border transition-all duration-200 z-50 hover:opacity-90"
         style={{
           background: "hsl(var(--app-surface))",
           borderColor: "hsl(var(--app-border))",
           color: "hsl(var(--app-text-muted))",
         }}
       >
-        {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-500" />}
+        {isDark ? <Sun className="w-4 h-4 text-amber-400 animate-pulse-subtle" /> : <Moon className="w-4 h-4 text-slate-500" />}
       </button>
 
       {/* Login / Setup Card */}
       <div
-        className="w-full max-w-md rounded-3xl p-8 shadow-2xl relative z-10 border transition-colors duration-200"
+        className="w-full max-w-md rounded-3xl p-8 shadow-2xl relative z-10 border transition-all duration-200"
         style={{
           background: "hsl(var(--app-surface))",
           borderColor: "hsl(var(--app-border))",
@@ -163,7 +159,7 @@ export default function LoginPage() {
             {setupStep ? "Configuración Inicial" : "El Arca Market"}
           </h1>
           <p className="text-sm mt-1" style={{ color: "hsl(var(--app-text-muted))" }}>
-            {setupStep ? "Crea la primera cuenta administrador del sistema" : "Gestión Inteligente, POS e IA"}
+            {setupStep ? "Inicializa tu cuenta de administrador de forma segura" : "Gestión Inteligente, POS e IA"}
           </p>
         </div>
 
@@ -173,7 +169,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        {/* ── MODO 1: CONFIGURACIÓN INICIAL (SETUP) ── */}
+        {/* ── MODO 1: CONFIGURACIÓN INICIAL (SETUP DE TU USUARIO) ── */}
         {setupStep ? (
           setupSuccess ? (
             <div className="text-center py-6 space-y-3">
@@ -187,20 +183,19 @@ export default function LoginPage() {
             <form onSubmit={handleSetup} className="space-y-4">
               <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-500 text-[11px] font-medium leading-relaxed mb-4 flex items-start gap-2">
                 <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
-                <span>La base de datos está vacía. Registra tu cuenta administradora para inicializar la tienda de forma segura.</span>
+                <span>La base de datos está vacía. Crea el usuario administrador del sistema.</span>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: "hsl(var(--app-text-muted))" }}>
-                  Nombre Comercial del Local
+                  Nombre Comercial
                 </label>
                 <input
                   type="text"
                   required
                   value={shopName}
                   onChange={(e) => setShopName(e.target.value)}
-                  placeholder="Ej. El Arca Minimarket"
-                  className="w-full rounded-xl px-4 py-2.5 text-xs border focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-xl px-4 py-2.5 text-xs border focus:outline-none focus:border-emerald-500 transition-all duration-200"
                   style={{
                     background: "hsl(var(--app-bg))",
                     borderColor: "hsl(var(--app-border))",
@@ -211,15 +206,14 @@ export default function LoginPage() {
 
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: "hsl(var(--app-text-muted))" }}>
-                  Nombre de Administrador
+                  Nombre Completo
                 </label>
                 <input
                   type="text"
                   required
                   value={adminName}
                   onChange={(e) => setAdminName(e.target.value)}
-                  placeholder="Ej. Juan Pérez"
-                  className="w-full rounded-xl px-4 py-2.5 text-xs border focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-xl px-4 py-2.5 text-xs border focus:outline-none focus:border-emerald-500 transition-all duration-200"
                   style={{
                     background: "hsl(var(--app-bg))",
                     borderColor: "hsl(var(--app-border))",
@@ -237,8 +231,7 @@ export default function LoginPage() {
                   required
                   value={adminEmail}
                   onChange={(e) => setAdminEmail(e.target.value)}
-                  placeholder="ejemplo@gmail.com"
-                  className="w-full rounded-xl px-4 py-2.5 text-xs border focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-xl px-4 py-2.5 text-xs border focus:outline-none focus:border-emerald-500 transition-all duration-200"
                   style={{
                     background: "hsl(var(--app-bg))",
                     borderColor: "hsl(var(--app-border))",
@@ -249,15 +242,14 @@ export default function LoginPage() {
 
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: "hsl(var(--app-text-muted))" }}>
-                  Contraseña segura
+                  Contraseña
                 </label>
                 <input
                   type="password"
                   required
                   value={adminPassword}
                   onChange={(e) => setAdminPassword(e.target.value)}
-                  placeholder="Mínimo 8 caracteres"
-                  className="w-full rounded-xl px-4 py-2.5 text-xs border focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-xl px-4 py-2.5 text-xs border focus:outline-none focus:border-emerald-500 transition-all duration-200"
                   style={{
                     background: "hsl(var(--app-bg))",
                     borderColor: "hsl(var(--app-border))",
@@ -269,15 +261,15 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 text-slate-950 font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
+                className="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 text-slate-950 font-bold rounded-xl shadow-lg transition-all duration-200 flex items-center justify-center gap-2 group disabled:opacity-50"
               >
-                <span>{loading ? "Inicializando tienda..." : "Inicializar Sistema"}</span>
+                <span>{loading ? "Registrando Administrador..." : "Registrar Administrador"}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </form>
           )
         ) : (
-          /* ── MODO 2: INICIO DE SESIÓN NORMAL ── */
+          /* ── MODO 2: INICIO DE SESIÓN NORMAL (SIN BOTONES DE PRESET DEMO) ── */
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "hsl(var(--app-text-muted))" }}>
@@ -290,8 +282,8 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="usuario@elarcamarket.com"
-                  className="w-full rounded-xl pl-11 pr-4 py-2.5 text-sm border focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
+                  placeholder="ejemplo@gmail.com"
+                  className="w-full rounded-xl pl-11 pr-4 py-2.5 text-sm border focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all duration-200"
                   style={{
                     background: "hsl(var(--app-bg))",
                     borderColor: "hsl(var(--app-border))",
@@ -313,7 +305,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full rounded-xl pl-11 pr-4 py-2.5 text-sm border focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
+                  className="w-full rounded-xl pl-11 pr-4 py-2.5 text-sm border focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all duration-200"
                   style={{
                     background: "hsl(var(--app-bg))",
                     borderColor: "hsl(var(--app-border))",
@@ -326,59 +318,12 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 text-slate-950 font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
+              className="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 text-slate-950 font-bold rounded-xl shadow-lg transition-all duration-200 flex items-center justify-center gap-2 group disabled:opacity-50"
             >
               <span>{loading ? "Iniciando sesión..." : "Ingresar al Sistema"}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
-        )}
-
-        {/* Quick Demo Login Preset Buttons (Only if not in setup mode) */}
-        {!setupStep && (
-          <div className="mt-8 pt-6 border-t" style={{ borderColor: "hsl(var(--app-border))" }}>
-            <p className="text-xs text-center font-medium mb-3" style={{ color: "hsl(var(--app-text-dim))" }}>
-              Acceso Rápido de Prueba (Demo):
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                onClick={() => setPresetUser("admin@elarcamarket.com", "Admin123!")}
-                className="px-2.5 py-2 rounded-lg text-xs font-semibold text-emerald-500 flex flex-col items-center gap-1 transition-colors border hover:bg-[hsl(var(--app-hover))]"
-                style={{
-                  background: "hsl(var(--app-surface-2))",
-                  borderColor: "hsl(var(--app-border))",
-                }}
-              >
-                <ShieldCheck className="w-4 h-4" />
-                <span>Admin</span>
-              </button>
-
-              <button
-                onClick={() => setPresetUser("supervisor@elarcamarket.com", "Super123!")}
-                className="px-2.5 py-2 rounded-lg text-xs font-semibold text-teal-500 flex flex-col items-center gap-1 transition-colors border hover:bg-[hsl(var(--app-hover))]"
-                style={{
-                  background: "hsl(var(--app-surface-2))",
-                  borderColor: "hsl(var(--app-border))",
-                }}
-              >
-                <UserCheck className="w-4 h-4" />
-                <span>Supervisor</span>
-              </button>
-
-              <button
-                onClick={() => setPresetUser("cajero@elarcamarket.com", "Cajero123!")}
-                className="px-2.5 py-2 rounded-lg text-xs font-semibold flex flex-col items-center gap-1 transition-colors border hover:bg-[hsl(var(--app-hover))]"
-                style={{
-                  background: "hsl(var(--app-surface-2))",
-                  borderColor: "hsl(var(--app-border))",
-                  color: "hsl(var(--app-text-muted))",
-                }}
-              >
-                <Store className="w-4 h-4" />
-                <span>Cajero</span>
-              </button>
-            </div>
-          </div>
         )}
 
         {/* Toggle back to login if setup is manually requested and setupRequired is true */}

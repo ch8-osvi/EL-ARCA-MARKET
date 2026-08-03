@@ -92,22 +92,68 @@ export async function POST(req: Request) {
   }
 }
 
-/**
- * GET /api/auth/setup
- * Informa si el sistema requiere configuración inicial o si ya está inicializado.
- */
 export async function GET() {
   try {
     await connectDB();
     const userCount = await User.countDocuments({});
+
+    if (userCount === 0) {
+      const adminPasswordHash = await hashPassword("Osvaldo.RN8");
+      const userId = new mongoose.Types.ObjectId();
+
+      const organization = await Organization.create({
+        name: "El Arca Market",
+        ownerId: userId,
+        active: true,
+      });
+
+      const store = await Store.create({
+        organizationId: organization._id,
+        name: "El Arca Market - Sucursal Principal",
+        code: "SUC-01",
+        active: true,
+      });
+
+      const adminUser = await User.create({
+        _id: userId,
+        organizationId: organization._id,
+        storeId: store._id,
+        name: "Osvaldo Appel",
+        email: "osvaldojesusappel@gmail.com",
+        passwordHash: adminPasswordHash,
+        role: "admin",
+        active: true,
+      });
+
+      await Settings.create({
+        organizationId: organization._id,
+        storeId: store._id,
+        businessName: "El Arca Market",
+        currency: "USD",
+        currencySymbol: "$",
+        decimalPlaces: 2,
+        allowNegativeStock: false,
+        requireCashSessionForSales: true,
+      });
+
+      return NextResponse.json({
+        setupRequired: false,
+        success: true,
+        message: "¡Base de datos auto-inicializada con tu cuenta de administrador exitosamente!",
+        user: {
+          name: adminUser.name,
+          email: adminUser.email,
+          role: adminUser.role,
+        },
+      });
+    }
+
     return NextResponse.json({
-      setupRequired: userCount === 0,
-      message: userCount === 0 
-        ? "El sistema requiere configuración inicial." 
-        : "El sistema ya está inicializado.",
+      setupRequired: false,
+      message: "El sistema ya está inicializado.",
     });
   } catch (error: unknown) {
     const errMessage = error instanceof Error ? error.message : "Error de conexión a la BD";
-    return NextResponse.json({ error: `Error al verificar estado de la BD: ${errMessage}` }, { status: 500 });
+    return NextResponse.json({ error: `Error al verificar o inicializar la BD: ${errMessage}` }, { status: 500 });
   }
 }

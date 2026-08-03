@@ -231,10 +231,20 @@ html.light body {
 }
 
 /* ═══════════════════════════════════════════════════
-   SELECCIÓN DE TEXTO
+   SELECCIÓN DE TEXTO Y TRANSICIONES GLOBALES
    ═══════════════════════════════════════════════════ */
 
 ::selection {
   background-color: hsl(142 70% 45% / 0.35);
   color: inherit;
+}
+
+/* Transiciones fluidas en hovers de botones y enlaces */
+a, 
+button, 
+input, 
+select, 
+textarea,
+.transition-all {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
