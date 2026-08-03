@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "db:seed": "node --import tsx/esm src/lib/db/seed.ts"
+    "db:seed": "node --import tsx/esm src/lib/db/seed.ts",
+    "db:reset": "node --import tsx/esm src/scripts/reset-db.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.1.9",
