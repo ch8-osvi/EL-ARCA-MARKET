@@ -55,7 +55,12 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch (parseError) {
+        throw new Error(`Error de conexión con el servidor (${res.status}). Es posible que la base de datos esté inaccesible o Vercel haya devuelto un error de red.`);
+      }
       
       if (data.setupRequired) {
         setSetupRequired(true);
@@ -95,7 +100,13 @@ export default function LoginPage() {
         }),
       });
 
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch (parseError) {
+        throw new Error(`Error de conexión con el servidor (${res.status}). La base de datos puede estar inaccesible.`);
+      }
+      
       if (!res.ok) {
         throw new Error(data.error || "Error al configurar el administrador.");
       }
