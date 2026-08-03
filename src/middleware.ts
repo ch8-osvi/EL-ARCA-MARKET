@@ -1,6 +1,30 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { verifyToken } from "@/lib/auth/jwt";
+
+// Decodificador de JWT 100% compatible con Next.js Edge Runtime (sin dependencias Node.js)
+function decodeJwtPayload(token: string) {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
+    );
+    const payload = JSON.parse(jsonPayload);
+    
+    // Verificar si el token expiró
+    if (payload.exp && Date.now() >= payload.exp * 1000) {
+      return null;
+    }
+    
+    return payload;
+  } catch (e) {
+    return null;
+  }
+}
 
 // Rutas protegidas que requieren sesión activa
 const PROTECTED_PREFIXES = [
@@ -18,7 +42,7 @@ const PROTECTED_PREFIXES = [
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Verificar si la ruta requiere autenticación
+  // Verificar si la ruta es una ruta protegida
   const isProtectedRoute = PROTECTED_PREFIXES.some((prefix) =>
     pathname.startsWith(prefix)
   );
@@ -27,7 +51,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Buscar token en cookie o header Authorization
+  // Extraer token desde Cookie o Header Authorization
   const tokenCookie = request.cookies.get("arca_token")?.value;
   const authHeader = request.headers.get("Authorization");
   const tokenHeader = authHeader?.startsWith("Bearer ")
@@ -42,13 +66,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const payload = verifyToken(token);
+  const payload = decodeJwtPayload(token);
 
   if (!payload) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     const response = NextResponse.redirect(loginUrl);
-    // Limpiar cookie inválida
     response.cookies.delete("arca_token");
     return response;
   }

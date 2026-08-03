@@ -70,10 +70,10 @@ export default function LoginPage() {
 
       localStorage.setItem("arca_token", data.token);
       localStorage.setItem("arca_user", JSON.stringify(data.user));
-      router.push("/dashboard");
+      document.cookie = `arca_token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
+      window.location.href = "/dashboard";
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Error al iniciar sesión.");
-    } finally {
       setLoading(false);
     }
   };
