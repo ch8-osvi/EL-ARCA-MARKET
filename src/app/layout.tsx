@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -29,9 +30,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="dark">
-      <body className={`${inter.variable} font-sans antialiased bg-slate-950 text-slate-100 min-h-screen selection:bg-emerald-500 selection:text-white`}>
-        {children}
+    <html lang="es" suppressHydrationWarning>
+      {/*
+        Script inline que se ejecuta ANTES del primer paint para
+        aplicar el tema guardado y evitar el "flash" de color incorrecto.
+      */}
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var t = localStorage.getItem('arca_theme') || 'dark';
+                  document.documentElement.classList.add(t);
+                } catch(e) {
+                  document.documentElement.classList.add('dark');
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className={`${inter.variable} font-sans antialiased min-h-screen`}>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

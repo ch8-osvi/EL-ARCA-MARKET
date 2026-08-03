@@ -1,12 +1,15 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/el_arca_market";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   throw new Error(
-    "Por favor define la variable de entorno MONGODB_URI en .env.local"
+    "❌ MONGODB_URI no está definida. Crea el archivo .env.local con tu URI de MongoDB Atlas. Consulta .env.example para ver el formato."
   );
 }
+
+// TypeScript guard: después del throw, MONGODB_URI es definitivamente string
+const mongoUri: string = MONGODB_URI;
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -40,7 +43,7 @@ export async function connectDB(): Promise<typeof mongoose> {
       socketTimeoutMS: 45000,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((m) => {
+    cached.promise = mongoose.connect(mongoUri, opts).then((m) => {
       console.log("🟢 Conexión exitosa a MongoDB Atlas / El Arca Market");
       return m;
     });

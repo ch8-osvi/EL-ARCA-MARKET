@@ -2,8 +2,111 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════
+   OVERRIDES MODO CLARO — Mapeo global de colores slate oscuros
+   Se aplica a TODAS las páginas/componentes cuando la clase
+   .light está en el <html>, sin necesidad de modificar cada archivo.
+   ═══════════════════════════════════════════════════ */
+
+html.light {
+  /* ── Fondo principal (bg-slate-950, bg-slate-900) → blancos/grises claros */
+  --tw-bg-opacity: 1;
+}
+
+/* Fondos oscuros → fondos claros */
+html.light .bg-slate-950 { background-color: rgb(248 250 252) !important; }
+html.light .bg-slate-900 { background-color: rgb(255 255 255) !important; }
+html.light .bg-slate-850 { background-color: rgb(248 250 252) !important; }
+html.light .bg-slate-800 { background-color: rgb(241 245 249) !important; }
+html.light .bg-slate-700 { background-color: rgb(226 232 240) !important; }
+
+/* Textos oscuros → textos apropiados en modo claro */
+html.light .text-slate-100 { color: rgb(15 23 42) !important; }
+html.light .text-slate-200 { color: rgb(30 41 59) !important; }
+html.light .text-slate-300 { color: rgb(51 65 85) !important; }
+html.light .text-slate-400 { color: rgb(100 116 139) !important; }
+html.light .text-white     { color: rgb(15 23 42) !important; }
+
+/* Bordes oscuros → bordes sutiles claros */
+html.light .border-slate-800 { border-color: rgb(226 232 240) !important; }
+html.light .border-slate-700 { border-color: rgb(203 213 225) !important; }
+
+/* Hover states en modo claro */
+html.light .hover\:bg-slate-800:hover { background-color: rgb(241 245 249) !important; }
+html.light .hover\:bg-slate-700:hover { background-color: rgb(226 232 240) !important; }
+html.light .hover\:text-white:hover   { color: rgb(15 23 42) !important; }
+
+/* Inputs y controles en modo claro */
+html.light input[class*="bg-slate-"],
+html.light textarea[class*="bg-slate-"],
+html.light select[class*="bg-slate-"] {
+  background-color: rgb(248 250 252) !important;
+  border-color: rgb(203 213 225) !important;
+  color: rgb(15 23 42) !important;
+}
+
+/* Placeholder */
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: rgb(148 163 184) !important;
+}
+
+/* Glassmorphism en modo claro (ya cubierto arriba pero por si acaso) */
+html.light .backdrop-blur-lg {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   SISTEMA DE TEMAS — El Arca Market
+   Variables CSS para modo oscuro (default) y claro
+   ═══════════════════════════════════════════════════ */
+
 @layer base {
-  :root {
+  /* ── MODO OSCURO (default) ── */
+  :root,
+  .dark {
+    /* Shadcn/ui color tokens */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 7%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 7%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 142.1 70.6% 45.3%;
+    --primary-foreground: 144.9 80.4% 10%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 142.1 70.6% 45.3%;
+    --radius: 0.75rem;
+
+    /* ── Tokens semánticos propios de la app ── */
+    --app-bg:          222 47% 5%;        /* fondo principal */
+    --app-surface:     222 47% 8%;        /* sidebar / navbar */
+    --app-surface-2:   222 35% 11%;       /* cards / panels */
+    --app-border:      217 33% 17%;       /* bordes sutiles */
+    --app-border-soft: 217 20% 13%;       /* bordes muy sutiles */
+
+    --app-text:        210 40% 96%;       /* texto principal */
+    --app-text-muted:  215 20% 55%;       /* texto secundario */
+    --app-text-dim:    215 15% 38%;       /* texto desactivado */
+
+    --app-primary:     142 71% 45%;       /* verde emerald */
+    --app-primary-dim: 142 71% 45% / 0.15;
+
+    --app-hover:       217 33% 14%;       /* hover sobre items nav */
+  }
+
+  /* ── MODO CLARO ── */
+  .light {
+    /* Shadcn/ui color tokens */
     --background: 210 40% 98%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -24,38 +127,47 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 142.1 76.2% 36.3%;
     --radius: 0.75rem;
-  }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 7%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 7%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 142.1 70.6% 45.3%;
-    --primary-foreground: 144.9 80.4% 10%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 142.1 70.6% 45.3%;
+    /* ── Tokens semánticos propios de la app ── */
+    --app-bg:          210 30% 96%;       /* fondo principal gris muy suave */
+    --app-surface:     0 0% 100%;         /* sidebar / navbar blanco */
+    --app-surface-2:   0 0% 100%;         /* cards / panels */
+    --app-border:      214 32% 91%;       /* bordes sutiles */
+    --app-border-soft: 214 20% 94%;       /* bordes muy sutiles */
+
+    --app-text:        222 47% 11%;       /* texto principal oscuro */
+    --app-text-muted:  215 16% 47%;       /* texto secundario */
+    --app-text-dim:    215 10% 65%;       /* texto desactivado */
+
+    --app-primary:     142 76% 36%;       /* verde emerald (más oscuro en claro) */
+    --app-primary-dim: 142 76% 36% / 0.10;
+
+    --app-hover:       210 40% 94%;       /* hover suave sobre items nav */
   }
+}
+
+/* ═══════════════════════════════════════════════════
+   ESTILOS BASE DEL BODY
+   ═══════════════════════════════════════════════════ */
+
+html {
+  color-scheme: dark;
+}
+html.light {
+  color-scheme: light;
 }
 
 body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background-color: hsl(var(--app-bg));
+  color: hsl(var(--app-text));
   font-feature-settings: "rlig" 1, "calt" 1;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Custom Scrollbars */
+/* ═══════════════════════════════════════════════════
+   SCROLLBARS PERSONALIZADOS
+   ═══════════════════════════════════════════════════ */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -64,27 +176,34 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.4);
+  background: hsl(var(--app-border));
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.7);
+  background: hsl(var(--app-text-dim));
 }
 
-/* Glassmorphism & Animations */
+/* ═══════════════════════════════════════════════════
+   GLASSMORPHISM
+   ═══════════════════════════════════════════════════ */
+
 .glass-panel {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.dark .glass-panel {
   background: rgba(15, 23, 42, 0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
+
+.light .glass-panel {
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* ═══════════════════════════════════════════════════
+   ANIMACIONES
+   ═══════════════════════════════════════════════════ */
 
 @keyframes pulse-subtle {
   0%, 100% { opacity: 1; transform: scale(1); }
@@ -93,4 +212,23 @@ body {
 
 .animate-pulse-subtle {
   animation: pulse-subtle 3s infinite ease-in-out;
+}
+
+@keyframes theme-fade {
+  from { opacity: 0.8; }
+  to   { opacity: 1; }
+}
+
+html.dark body,
+html.light body {
+  animation: theme-fade 0.15s ease-out;
+}
+
+/* ═══════════════════════════════════════════════════
+   SELECCIÓN DE TEXTO
+   ═══════════════════════════════════════════════════ */
+
+::selection {
+  background-color: hsl(142 70% 45% / 0.35);
+  color: inherit;
 }

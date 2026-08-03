@@ -41,20 +41,26 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-screen sticky top-0 z-30 select-none hidden md:flex">
+    <aside
+      className={clsx(
+        "w-64 flex flex-col h-screen sticky top-0 z-30 select-none hidden md:flex",
+        "bg-[hsl(var(--app-surface))] border-r border-[hsl(var(--app-border))]",
+        "transition-colors duration-200"
+      )}
+    >
       {/* Brand Logo Header */}
-      <div className="p-5 border-b border-slate-800/80 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-900/30 text-slate-950 font-bold text-xl">
+      <div className="p-5 border-b border-[hsl(var(--app-border-soft))] flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-900/20 text-slate-950 font-bold text-xl">
           <Store className="w-6 h-6 text-slate-950 stroke-[2.5]" />
         </div>
         <div>
-          <h1 className="font-extrabold text-lg tracking-tight text-white leading-tight flex items-center gap-1.5">
+          <h1 className="font-extrabold text-lg tracking-tight text-[hsl(var(--app-text))] leading-tight flex items-center gap-1.5">
             El Arca
-            <span className="text-emerald-400 text-xs px-1.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 font-semibold">
+            <span className="text-emerald-500 text-xs px-1.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 font-semibold">
               POS
             </span>
           </h1>
-          <p className="text-xs text-slate-400">Gestión Inteligente</p>
+          <p className="text-xs text-[hsl(var(--app-text-muted))]">Gestión Inteligente</p>
         </div>
       </div>
 
@@ -71,8 +77,8 @@ export function Sidebar() {
               className={clsx(
                 "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 group relative",
                 isActive
-                  ? "bg-emerald-600/15 text-emerald-400 border border-emerald-500/30 font-semibold shadow-sm"
-                  : "text-slate-300 hover:text-white hover:bg-slate-800/70"
+                  ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/25 font-semibold shadow-sm"
+                  : "text-[hsl(var(--app-text-muted))] hover:text-[hsl(var(--app-text))] hover:bg-[hsl(var(--app-hover))]"
               )}
             >
               <div className="flex items-center gap-3">
@@ -80,10 +86,10 @@ export function Sidebar() {
                   className={clsx(
                     "w-5 h-5 transition-transform duration-200 group-hover:scale-110",
                     isActive
-                      ? "text-emerald-400"
+                      ? "text-emerald-500"
                       : item.aiGlow
-                      ? "text-teal-400 animate-pulse-subtle"
-                      : "text-slate-400 group-hover:text-slate-200"
+                      ? "text-teal-500 animate-pulse-subtle"
+                      : "text-[hsl(var(--app-text-dim))] group-hover:text-[hsl(var(--app-text-muted))]"
                   )}
                 />
                 <span>{item.name}</span>
@@ -101,21 +107,21 @@ export function Sidebar() {
       </nav>
 
       {/* Footer User Info & Logout */}
-      <div className="p-4 border-t border-slate-800/80 bg-slate-900/50">
+      <div className="p-4 border-t border-[hsl(var(--app-border-soft))] bg-[hsl(var(--app-surface))]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-emerald-400">
+            <div className="w-8 h-8 rounded-full bg-[hsl(var(--app-surface-2))] border border-[hsl(var(--app-border))] flex items-center justify-center text-xs font-bold text-emerald-500">
               EA
             </div>
             <div className="text-xs">
-              <p className="font-semibold text-slate-200">El Arca Market</p>
-              <p className="text-slate-400 capitalize">Administrador</p>
+              <p className="font-semibold text-[hsl(var(--app-text))]">El Arca Market</p>
+              <p className="text-[hsl(var(--app-text-muted))] capitalize">Administrador</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
             title="Cerrar Sesión"
-            className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
+            className="p-2 text-[hsl(var(--app-text-muted))] hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors"
           >
             <LogOut className="w-4 h-4" />
           </button>
