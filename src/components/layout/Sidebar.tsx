@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -34,9 +35,23 @@ export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
 
+  const [currentUser, setCurrentUser] = useState<{ name: string; role: string } | null>(null);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("arca_user");
+      if (stored) {
+        setCurrentUser(JSON.parse(stored));
+      }
+    } catch (e) {
+      // Ignore parse error
+    }
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("arca_token");
     localStorage.removeItem("arca_user");
+    document.cookie = "arca_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;";
     router.push("/login");
   };
 
@@ -110,12 +125,16 @@ export function Sidebar() {
       <div className="p-4 border-t border-[hsl(var(--app-border-soft))] bg-[hsl(var(--app-surface))]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[hsl(var(--app-surface-2))] border border-[hsl(var(--app-border))] flex items-center justify-center text-xs font-bold text-emerald-500">
-              EA
+            <div className="w-8 h-8 rounded-full bg-[hsl(var(--app-surface-2))] border border-[hsl(var(--app-border))] flex items-center justify-center text-xs font-bold text-emerald-500 uppercase">
+              {currentUser?.name ? currentUser.name.slice(0, 2) : "EA"}
             </div>
-            <div className="text-xs">
-              <p className="font-semibold text-[hsl(var(--app-text))]">El Arca Market</p>
-              <p className="text-[hsl(var(--app-text-muted))] capitalize">Administrador</p>
+            <div className="text-xs truncate max-w-[110px]">
+              <p className="font-semibold text-[hsl(var(--app-text))] truncate">
+                {currentUser?.name || "El Arca Market"}
+              </p>
+              <p className="text-[hsl(var(--app-text-muted))] capitalize text-[10px]">
+                {currentUser?.role || "Administrador"}
+              </p>
             </div>
           </div>
           <button

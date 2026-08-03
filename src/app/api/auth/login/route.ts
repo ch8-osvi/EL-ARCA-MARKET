@@ -44,7 +44,7 @@ export async function POST(req: Request) {
       organizationId: user.organizationId.toString(),
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       token,
       user: {
@@ -56,8 +56,22 @@ export async function POST(req: Request) {
         organizationId: user.organizationId.toString(),
       },
     });
-  } catch (error: any) {
-    console.error("Error en login:", error);
+
+    // Establecer cookie seguro de sesión de 7 días para el middleware de Next.js
+    response.cookies.set({
+      name: "arca_token",
+      value: token,
+      httpOnly: false, // Permitir acceso en cliente y servidor
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60, // 7 días
+      path: "/",
+    });
+
+    return response;
+  } catch (error: unknown) {
+    const errMessage = error instanceof Error ? error.message : "Error al autenticar";
+    console.error("Error en login:", errMessage);
     return NextResponse.json({ error: "Error en el servidor al autenticar." }, { status: 500 });
   }
 }
