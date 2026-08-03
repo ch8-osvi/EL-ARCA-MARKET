@@ -16,6 +16,16 @@ export async function POST(req: Request) {
 
     await connectDB();
 
+    // Validar si la base de datos está totalmente vacía
+    const userCount = await User.countDocuments({});
+    if (userCount === 0) {
+      return NextResponse.json({
+        success: false,
+        setupRequired: true,
+        error: "No hay usuarios registrados en el sistema. Debes realizar la configuración inicial.",
+      }, { status: 200 }); // Status 200 para que el cliente lea la propiedad setupRequired
+    }
+
     const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user || !user.active) {
       return NextResponse.json(
@@ -61,7 +71,7 @@ export async function POST(req: Request) {
     response.cookies.set({
       name: "arca_token",
       value: token,
-      httpOnly: false, // Permitir acceso en cliente y servidor
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60, // 7 días
@@ -70,8 +80,10 @@ export async function POST(req: Request) {
 
     return response;
   } catch (error: unknown) {
-    const errMessage = error instanceof Error ? error.message : "Error al autenticar";
-    console.error("Error en login:", errMessage);
-    return NextResponse.json({ error: "Error en el servidor al autenticar." }, { status: 500 });
+    const errMessage = error instanceof Error ? error.message : "Error al conectar con la base de datos";
+    console.error("🔴 Error en login:", errMessage);
+    return NextResponse.json({ 
+      error: `Error de conexión / base de datos: ${errMessage}. Verifica tu MONGODB_URI y el acceso de red IP en Atlas.` 
+    }, { status: 500 });
   }
 }
